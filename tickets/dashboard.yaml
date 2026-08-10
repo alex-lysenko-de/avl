@@ -1,0 +1,50 @@
+# Компактный обзор тикетов. Подробности — tickets/<id>/<id>.md,
+# дополнительные заметки (если есть) — tickets/<id>/readme.md.
+# status.txt в папке тикета — источник истины по статусу; здесь агрегированная копия,
+# обновляется синхронно при каждом изменении статуса.
+
+- id: "099"
+  title: Создать папку tickets
+  status: done
+- id: "100"
+  title: Создать папку wiki
+  status: done
+- id: "101"
+  title: Описать в wiki структуру C:/docs
+  status: done
+- id: "102"
+  title: Базовая структура каталогов и файлов проекта
+  status: done
+- id: "103"
+  title: Окружение разработчика
+  status: new
+- id: "104"
+  title: Git и доступ к удалённому репозиторию
+  status: new
+- id: "105"
+  title: Batch-скрипт commit+push
+  status: new
+- id: "106"
+  title: Автосборка .exe (PyInstaller)
+  status: new
+- id: "107"
+  title: Автосборка установщика (Inno Setup)
+  status: cancelled
+- id: "108"
+  title: Сборка update-пакета (ZIP + version.txt + manifest.json)
+  status: new
+- id: "109"
+  title: Механизм обновления (update.bat + update.ps1, --migrate)
+  status: new
+- id: "110"
+  title: GitHub Actions CI + публикация GitHub Release
+  status: new
+- id: "111"
+  title: Фиксация требуемого ПО разработчика
+  status: new
+- id: "112"
+  title: Дашборд тикетов
+  status: done
+- id: "113"
+  title: "demo (Tkinter) v0.1: базовое окно"
+  status: done
