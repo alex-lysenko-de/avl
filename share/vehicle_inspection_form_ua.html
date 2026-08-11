@@ -38,12 +38,12 @@
                    maxlength="10" required>
           </div>
           <div class="col-md-6">
-            <label for="registrationNumber" class="form-label required">Номерний знак</label>
+            <label for="registrationNumber" class="form-label required">Реєстраційний номер</label>
             <input id="registrationNumber" name="registrationNumber" class="form-control"
                    maxlength="10" required>
           </div>
           <div class="col-12">
-            <label for="vin" class="form-label required">Ідентифікаційний номер VIN</label>
+            <label for="vin" class="form-label required">Номер кузова (VIN)</label>
             <input id="vin" name="vin" class="form-control" maxlength="17"
                    pattern="[A-HJ-NPR-Z0-9]{17}" required>
             <div class="hint mt-1">17 символів латиницею та цифрами.</div>
@@ -71,7 +71,7 @@
           </div>
           <div class="col-md-4">
             <label for="firstRegistrationDate" class="form-label">Дата першої реєстрації</label>
-            <input id="firstRegistrationDate" name="firstRegistrationDate" type="date" class="form-control">
+            <input id="firstRegistrationDate" name="firstRegistrationDate" type="date" class="form-control" required>
           </div>
         </div>
       </div>
@@ -118,17 +118,22 @@
           <div class="col-md-4">
             <label for="unladenMass" class="form-label">Маса без навантаження, кг</label>
             <input id="unladenMass" name="unladenMass" type="number"
-                   class="form-control" min="0" step="1">
+                   class="form-control" min="10" step="1" required>
           </div>
           <div class="col-md-4">
             <label for="grossMass" class="form-label">Повна маса, кг</label>
             <input id="grossMass" name="grossMass" type="number"
-                   class="form-control" min="0" step="1">
+                   class="form-control" min="0" step="1" required>
           </div>
           <div class="col-md-4">
             <label for="seats" class="form-label">Кількість місць для сидіння</label>
             <input id="seats" name="seats" type="number"
-                   class="form-control" min="1" step="1">
+                   class="form-control" min="1" step="1" required>
+          </div>
+		           <div class="col-md-4">
+            <label for="standingPlaces" class="form-label">Кількість стоячих місць</label>
+            <input id="standingPlaces" name="standingPlaces" type="number"
+                   class="form-control" min="1" step="1" required>
           </div>
         </div>
       </div>
@@ -150,11 +155,15 @@
           </div>
           <div class="col-md-6">
             <label for="purpose" class="form-label">Призначення транспортного засобу</label>
-            <input id="purpose" name="purpose" class="form-control" maxlength="100">
+            <input id="purpose" name="purpose" class="form-control" maxlength="255" required>
           </div>
           <div class="col-md-6">
             <label for="bodyType" class="form-label">Тип кузова</label>
             <input id="bodyType" name="bodyType" class="form-control" maxlength="100">
+          </div>
+		  <div class="col-md-6">
+            <label for="specialNotes" class="form-label">Особливі відмітки</label>
+            <input id="specialNotes" name="specialNotes" class="form-control" maxlength="100" required>
           </div>
         </div>
       </div>
