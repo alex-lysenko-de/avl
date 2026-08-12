@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Форма створення заявки на ТО</title>
+  <style>
+    :root {
+      --primary: #0d6efd;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --border: #dee2e6;
+      --text: #212529;
+      --text-muted: #6c757d;
+      --success: #198754;
+      --warning: #ffc107;
+      --danger: #dc3545;
+    }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; }
+    .container { max-width: 900px; margin: 0 auto; background: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    h1, h2, h3 { color: #0b5ed7; margin-top: 0; }
+    .section { border: 1px solid var(--border); padding: 20px; border-radius: 6px; margin-bottom: 20px; background: #fff; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
+    
+    /* Зірочка для обов'язкових полів */
+    .required::after { content: " *"; color: var(--danger); }
+    
+    input[type="text"], input[type="date"], input[type="email"], input[type="tel"], select, textarea { 
+      width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; box-sizing: border-box; 
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(13,110,253,0.25); }
+    .info-box { background: #e2e3e5; padding: 15px; border-radius: 4px; font-size: 13px; margin-bottom: 20px; border-left: 4px solid var(--primary); }
+    .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.2s; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: #0b5ed7; }
+    .btn-success { background: var(--success); color: white; padding: 12px 24px; font-size: 16px; width: 100%; }
+    .btn-success:hover { background: #157347; }
+    .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 6px 12px; font-size: 12px;}
+    .btn-outline:hover { background: var(--primary); color: white; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .checkbox-group { display: flex; align-items: center; gap: 8px; }
+    .checkbox-group input { width: 18px; height: 18px; }
+    pre { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 13px; }
+    
+    /* Стилі для модального вікна та таблиці техпаспортів */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+    .modal-content { background: white; padding: 20px; border-radius: 8px; max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+    th, td { border: 1px solid var(--border); padding: 10px; text-align: left; }
+    th { background: var(--bg); font-weight: bold; }
+    tr.clickable:hover { background: #f1f8ff; cursor: pointer; }
+    .modal-close { float: right; cursor: pointer; font-size: 24px; font-weight: bold; color: var(--text-muted); border: none; background: none; line-height: 1; }
+  </style>
+</head>
+<body>
+
+<!-- Модальне вікно вибору техпаспорта -->
+<div class="modal-overlay" id="tpModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeTpModal()">&times;</button>
+    <h3 style="margin-bottom: 10px;">Вибір технічного паспорта</h3>
+    <p style="margin-top: 0; color: var(--text-muted);">Натисніть на рядок, щоб вибрати транспортний засіб:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Держ. номер</th>
+          <th>Марка / Модель</th>
+          <th>VIN-код</th>
+          <th>Власник (за ТП)</th>
+        </tr>
+      </thead>
+      <tbody id="tpTableBody">
+        <!-- Генерується через JS -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="container">
+  <h1>Нова заявка на технічний контроль</h1>
+
+  <div class="info-box">
+    <strong>🏢 Дані лабораторії:</strong> <span id="info_lab"></span><br><br>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <strong>🚗 Обраний ТЗ:</strong> <span id="info_tp" style="font-weight: bold; color: var(--primary);">Не обрано</span>
+      </div>
+      <button type="button" class="btn btn-primary" onclick="openTpModal()">Вибрати з бази ТП</button>
+    </div>
+  </div>
+
+  <form id="zayavkaForm">
+    <!-- Секція 1: Дані заявки та інспектора -->
+    <div class="section">
+      <div class="section-header">
+        <h3>1. Реквізити заявки</h3>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="required">Номер заявки</label>
+          <input type="text" id="req_number" value="105/2026" required oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label class="required">Дата заявки</label>
+          <input type="date" id="req_date" required onchange="updatePreview()">
+        </div>
+        <div class="form-group" style="grid-column: span 2;">
+          <label class="required">Виберіть інспектора</label>
+          <select id="inspector_select" required onchange="updatePreview()">
+            <!-- Опції генеруються JS -->
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Секція 2: Власник -->
+    <div class="section">
+      <div class="section-header">
+        <h3>2. Дані власника ТЗ</h3>
+        <button type="button" class="btn btn-outline" onclick="copyOwnerFromTP()" id="btn_copy_tp" disabled>Копіювати з Техпаспорта</button>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="required">Прізвище (або назва юр. особи)</label>
+          <input type="text" id="owner_last" placeholder="Шевченко / ТОВ 'Ромашка'" required oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label class="required">Ім'я та по батькові (за наявності)</label>
+          <input type="text" id="owner_first" placeholder="Тарас Григорович" required oninput="updatePreview()">
+        </div>
+        <div class="form-group" style="grid-column: span 2;">
+          <label class="required">Адреса (місцезнаходження)</label>
+          <textarea id="owner_address" rows="2" placeholder="м. Київ, вул. Хрещатик..." required oninput="updatePreview()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Секція 3: Замовник (може збігатися з власником) -->
+    <div class="section">
+      <div class="section-header">
+        <h3>3. Дані Замовника</h3>
+        <button type="button" class="btn btn-outline" onclick="copyFromOwner()">Замовник є власником (копіювати)</button>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="required">Прізвище</label>
+          <input type="text" id="cust_last" placeholder="Шевченко" required oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label class="required">Ім'я (та по батькові)</label>
+          <input type="text" id="cust_first" placeholder="Тарас" required oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label class="required">Серія посвідчення водія</label>
+          <input type="text" id="cust_dl_serie" placeholder="ВХА" maxlength="3" required oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label class="required">Номер посвідчення водія</label>
+          <input type="text" id="cust_dl_number" placeholder="123456" required oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label class="required">Телефон</label>
+          <input type="tel" id="cust_phone" placeholder="+380..." required oninput="updatePreview()">
+        </div>
+        <div class="form-group">
+          <label>Email</label> <!-- Зірочку прибрано -->
+          <input type="email" id="cust_email" placeholder="email@example.com" oninput="updatePreview()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Секція 4: Додаткові параметри -->
+    <div class="section">
+      <div class="section-header">
+        <h3>4. Додаткові умови</h3>
+      </div>
+      <div class="form-group checkbox-group">
+        <input type="checkbox" id="flag_own_purposes" onchange="updatePreview()">
+        <label for="flag_own_purposes" style="margin:0;">ТЗ використовується для власних потреб без залучення найманих працівників</label>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-success" onclick="downloadJSON()">Згенерувати JSON для Шаблонізатора</button>
+  </form>
+
+  <div style="margin-top: 30px;">
+    <h3>Готовий JSON (об'єднаний):</h3>
+    <pre id="jsonPreview">{}</pre>
+  </div>
+</div>
+
+<script>
+  // ==========================================
+  // ІМІТАЦІЯ БАЗИ ДАНИХ (Конфіг + Таблиця ТП)
+  // ==========================================
+  
+  const configData = {
+    firma: { name: "ТОВ «Авто-Лаб-Сервіс»" },
+    laboratory: { number: "№ 1" },
+    inspectors: [
+      { id: "i1", position: "Провідний інженер", first_name: "Олександр", last_name: "Сидоренко" },
+      { id: "i2", position: "Старший експерт", first_name: "Василь", last_name: "Коваленко" }
+    ]
+  };
+
+  // База техпаспортів (включає дані ТП + дані власника з цього ТП для зручності копіювання)
+  const tpDatabase = [
+    {
+      tp: {
+        registrationNumber: "АА1234ВВ", registrationDate: "2020-05-10", firstRegistrationInUkraineDate: "2018-03-12",
+        manufactureYear: "2015", make: "TOYOTA", vehicleType: "ЛЕГКОВИЙ", commercialDescription: "CAMRY",
+        vin: "JTDBB46K800123456", chassisNumber: "", maximumMass: "2100", massInService: "1550", category: "M1",
+        engineDisplacement: "2494", fuelOrEnergySource: "БЕНЗИН", color: "ЧОРНИЙ", seats: "5", standingPlaces: "0", specialNotes: "ГБО"
+      },
+      owner_info: { last_name: "Шевченко", first_name: "Тарас Григорович", address: "м. Київ, вул. Хрещатик 1" }
+    },
+    {
+      tp: {
+        registrationNumber: "ВС9876АХ", registrationDate: "2022-11-01", firstRegistrationInUkraineDate: "2022-11-01",
+        manufactureYear: "2021", make: "RENAULT", vehicleType: "ВАНТАЖНИЙ", commercialDescription: "MASTER",
+        vin: "VF1MA400012345678", chassisNumber: "", maximumMass: "3500", massInService: "2200", category: "N1",
+        engineDisplacement: "2299", fuelOrEnergySource: "ДИЗЕЛЬ", color: "БІЛИЙ", seats: "3", standingPlaces: "0", specialNotes: ""
+      },
+      owner_info: { last_name: "ТОВ 'Логістика Плюс'", first_name: "-", address: "м. Львів, вул. Городоцька 100" }
+    },
+    {
+      tp: {
+        registrationNumber: "КА0001ВХ", registrationDate: "2023-01-15", firstRegistrationInUkraineDate: "2023-01-15",
+        manufactureYear: "2022", make: "SKODA", vehicleType: "ЛЕГКОВИЙ", commercialDescription: "OCTAVIA",
+        vin: "TMBXX2NE3L0123456", chassisNumber: "", maximumMass: "1950", massInService: "1350", category: "M1",
+        engineDisplacement: "1395", fuelOrEnergySource: "БЕНЗИН", color: "СІРИЙ", seats: "5", standingPlaces: "0", specialNotes: ""
+      },
+      owner_info: { last_name: "Іваненко", first_name: "Іван Іванович", address: "м. Київ, пр. Перемоги 50" }
+    }
+  ];
+
+  let currentSelectedTP = null; // Поточний обраний ТП
+  let currentOwnerInfo = null;  // Інформація про власника з обраного ТП
+
+  // ==========================================
+  // ІНІЦІАЛІЗАЦІЯ ФОРМИ
+  // ==========================================
+  
+  window.onload = function() {
+    // Лабораторія
+    document.getElementById('info_lab').innerText = `${configData.firma.name}, Дільниця ${configData.laboratory.number}`;
+
+    // Дата заявки (сьогоднішня за замовчуванням, але можна міняти)
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('req_date').value = today;
+
+    // Список інспекторів
+    const select = document.getElementById('inspector_select');
+    configData.inspectors.forEach(insp => {
+      const option = document.createElement('option');
+      option.value = insp.id;
+      option.text = `${insp.last_name} ${insp.first_name} — ${insp.position}`;
+      select.appendChild(option);
+    });
+
+    // Відмальовування таблиці ТП у модальному вікні
+    const tbody = document.getElementById('tpTableBody');
+    tpDatabase.forEach((item, index) => {
+      const tr = document.createElement('tr');
+      tr.className = 'clickable';
+      tr.innerHTML = `
+        <td><strong>${item.tp.registrationNumber}</strong></td>
+        <td>${item.tp.make} ${item.tp.commercialDescription}</td>
+        <td>${item.tp.vin}</td>
+        <td>${item.owner_info.last_name} ${item.owner_info.first_name !== '-' ? item.owner_info.first_name : ''}</td>
+      `;
+      tr.onclick = () => selectTP(index);
+      tbody.appendChild(tr);
+    });
+    
+    updatePreview();
+  };
+
+  // ==========================================
+  // ЛОГІКА РОБОТИ З ТЕХПАСПОРТОМ ТА МОДАЛКОЮ
+  // ==========================================
+
+  function openTpModal() {
+    document.getElementById('tpModal').style.display = 'flex';
+  }
+
+  function closeTpModal() {
+    document.getElementById('tpModal').style.display = 'none';
+  }
+
+  function selectTP(index) {
+    currentSelectedTP = tpDatabase[index].tp;
+    currentOwnerInfo = tpDatabase[index].owner_info;
+    
+    // Оновлюємо плашку інфо
+    document.getElementById('info_tp').innerText = 
+      `${currentSelectedTP.make} ${currentSelectedTP.commercialDescription} (${currentSelectedTP.registrationNumber}), VIN: ${currentSelectedTP.vin}`;
+    
+    // Розблоковуємо кнопку копіювання власника
+    document.getElementById('btn_copy_tp').disabled = false;
+    
+    closeTpModal();
+    updatePreview();
+  }
+
+  // Копіювання власника з обраного техпаспорта в поля вводу
+  function copyOwnerFromTP() {
+    if(!currentOwnerInfo) return;
+    document.getElementById('owner_last').value = currentOwnerInfo.last_name;
+    document.getElementById('owner_first').value = currentOwnerInfo.first_name;
+    document.getElementById('owner_address').value = currentOwnerInfo.address;
+    updatePreview();
+  }
+
+  // Копіювання Власник -> Замовник
+  function copyFromOwner() {
+    document.getElementById('cust_last').value = document.getElementById('owner_last').value;
+    document.getElementById('cust_first').value = document.getElementById('owner_first').value;
+    updatePreview();
+  }
+
+  // ==========================================
+  // ФОРМУВАННЯ JSON
+  // ==========================================
+  
+  function getMergedData() {
+    const selectedInspId = document.getElementById('inspector_select').value;
+    const inspector = configData.inspectors.find(i => i.id === selectedInspId) || configData.inspectors[0];
+
+    return {
+      firma: { name: configData.firma.name },
+      laboratory: { number: configData.laboratory.number },
+      
+      inspection_request: {
+        number: document.getElementById('req_number').value,
+        date: document.getElementById('req_date').value
+      },
+      
+      tp: currentSelectedTP || {},
+
+      vehicle_owner: {
+        last_name: document.getElementById('owner_last').value,
+        first_name: document.getElementById('owner_first').value,
+        address: document.getElementById('owner_address').value
+      },
+      
+      customer: {
+        first_name: document.getElementById('cust_first').value,
+        last_name: document.getElementById('cust_last').value,
+        dl_serie: document.getElementById('cust_dl_serie').value,
+        dl_number: document.getElementById('cust_dl_number').value,
+        phone: document.getElementById('cust_phone').value,
+        email: document.getElementById('cust_email').value
+      },
+      
+      inspector: {
+        position: inspector.position,
+        first_name: inspector.first_name,
+        last_name: inspector.last_name
+      },
+
+      b_for_my_purposes: document.getElementById('flag_own_purposes').checked
+    };
+  }
+
+  function updatePreview() {
+    const data = getMergedData();
+    document.getElementById('jsonPreview').textContent = JSON.stringify(data, null, 2);
+  }
+
+  function downloadJSON() {
+    if (!currentSelectedTP) {
+      alert("Будь ласка, оберіть Технічний паспорт з бази!");
+      return;
+    }
+
+    // Перевірка на заповненість ОБОВ'ЯЗКОВИХ полів (email виключено з масиву)
+    const requiredIds = ['req_number', 'req_date', 'owner_last', 'owner_first', 'owner_address', 'cust_last', 'cust_first', 'cust_dl_serie', 'cust_dl_number', 'cust_phone'];
+    for(let id of requiredIds) {
+      const el = document.getElementById(id);
+      if(!el.value.trim()) {
+        alert("Будь ласка, заповніть всі обов'язкові поля, позначені зірочкою (*)");
+        el.focus();
+        return;
+      }
+    }
+
+    const data = getMergedData();
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const reqNum = data.inspection_request.number.replace('/', '-');
+    const autoNum = data.tp.registrationNumber || 'NO_AUTO';
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `zayavka_${reqNum}_${autoNum}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+</body>
+</html>

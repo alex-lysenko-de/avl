@@ -1,0 +1,618 @@
+{
+  "fields": [
+    {
+      "name": "documentTitle",
+      "code": null,
+      "title": "Назва документа",
+      "type": "readonly",
+      "placeholder": "Свідоцтво про реєстрацію ТЗ",
+      "hint": "Свідоцтво про реєстрацію ТЗ / Registration certificate",
+      "required": false,
+      "aliases": [
+        "tech_passport",
+        "назва документа",
+        "тип документа",
+        "свідоцтво про реєстрацію"
+      ]
+    },
+    {
+      "name": "certificateSeries",
+      "code": null,
+      "title": "Серія свідоцтва",
+      "type": "text",
+      "placeholder": "СХК",
+      "hint": "3 літери серії документа",
+      "required": false,
+      "validation": {
+        "maxlength": 3,
+        "pattern": "[A-Za-zА-Яа-яІіЇїЄє]{3}"
+      },
+      "aliases": [
+        "серия техпаспорта",
+        "серія свідоцтва",
+        "серія",
+        "серия документа",
+        "серія техпаспорта"
+      ]
+    },
+    {
+      "name": "certificateNumber",
+      "code": null,
+      "title": "Номер свідоцтва",
+      "type": "text",
+      "placeholder": "123456",
+      "hint": "Номер бланка або електронного свідоцтва",
+      "required": false,
+      "validation": {
+        "maxlength": 10
+      },
+      "aliases": [
+        "номер техпаспорта",
+        "номер свідоцтва",
+        "номер документа",
+        "номер бланка"
+      ]
+    },
+    {
+      "name": "registrationNumber",
+      "code": "A",
+      "title": "Реєстраційний номер",
+      "type": "text",
+      "placeholder": "KA1234AB",
+      "hint": "[A] Реєстраційний номер транспортного засобу",
+      "required": true,
+      "validation": {
+        "maxlength": 10
+      },
+      "aliases": [
+        "гос номер",
+        "держномер",
+        "номерной знак",
+        "номерний знак",
+        "реєстраційний номер",
+        "A"
+      ]
+    },
+    {
+      "name": "firstRegistrationDate",
+      "code": "B",
+      "title": "Дата першої реєстрації",
+      "type": "date",
+      "placeholder": "YYYY-MM-DD",
+      "hint": "[B] Дата першої реєстрації транспортного засобу",
+      "required": false,
+      "aliases": [
+        "дата первой регистрации",
+        "дата першої реєстрації",
+        "B"
+      ]
+    },
+    {
+      "name": "firstRegistrationInUkraineDate",
+      "code": "B.1",
+      "title": "Дата першої реєстрації в Україні",
+      "type": "date",
+      "placeholder": "YYYY-MM-DD",
+      "hint": "[B.1] Дата першої реєстрації транспортного засобу в Україні",
+      "required": true,
+      "aliases": [
+        "дата первой регистрации в Украине",
+        "дата першої реєстрації в Україні",
+        "B.1"
+      ]
+    },
+    {
+      "name": "manufactureYear",
+      "code": "B.2",
+      "title": "Рік випуску",
+      "type": "number",
+      "placeholder": "2024",
+      "hint": "[B.2] Рік випуску транспортного засобу",
+      "required": true,
+      "validation": {
+        "min": 1900,
+        "max": 2099,
+        "step": 1
+      },
+      "aliases": [
+        "год выпуска",
+        "рік випуску",
+        "год авто",
+        "B.2"
+      ]
+    },
+    {
+      "name": "registrationDate",
+      "code": "I",
+      "title": "Дата реєстрації",
+      "type": "date",
+      "placeholder": "YYYY-MM-DD",
+      "hint": "[I] Дата реєстрації, яку засвідчує це свідоцтво",
+      "required": true,
+      "aliases": [
+        "дата выдачи",
+        "дата регистрации",
+        "дата реєстрації",
+        "I"
+      ]
+    },
+    {
+      "name": "expirationDate",
+      "code": "H",
+      "title": "Дійсне до",
+      "type": "date",
+      "placeholder": "YYYY-MM-DD",
+      "hint": "[H] Строк дії свідоцтва, за наявності обмеження",
+      "required": false,
+      "aliases": [
+        "срок действия",
+        "термін дії",
+        "действителен до",
+        "дійсне до",
+        "H"
+      ]
+    },
+    {
+      "name": "ownerSurnameOrOrganization",
+      "code": "C.1.1",
+      "title": "Прізвище або організація",
+      "type": "text",
+      "placeholder": "Шевченко / ТОВ \"Авто\"",
+      "hint": "[C.1.1] Прізвище власника або організація",
+      "required": true,
+      "aliases": [
+        "фамилия владельца",
+        "название компании",
+        "прізвище",
+        "організація",
+        "власник",
+        "C.1.1"
+      ]
+    },
+    {
+      "name": "ownerGivenNames",
+      "code": "C.1.2",
+      "title": "Ім’я та по батькові",
+      "type": "text",
+      "placeholder": "Іван Петрович",
+      "hint": "[C.1.2] Ім’я та по батькові власника",
+      "required": true,
+      "aliases": [
+        "имя отчество владельца",
+        "ім'я по батькові",
+        "ім’я та по батькові",
+        "C.1.2"
+      ]
+    },
+    {
+      "name": "ownerAddress",
+      "code": "C.1.3",
+      "title": "Адреса",
+      "type": "textarea",
+      "placeholder": "м. Київ, вул. Хрещатик, буд. 1",
+      "hint": "[C.1.3] Місце проживання або місцезнаходження",
+      "required": false,
+      "aliases": [
+        "адрес владельца",
+        "місце проживання",
+        "місцезнаходження",
+        "адреса",
+        "C.1.3"
+      ]
+    },
+    {
+      "name": "ownership",
+      "code": "C.4",
+      "title": "Власність",
+      "type": "select",
+      "placeholder": "Оберіть статус власника",
+      "hint": "[C.4] a - є власником / b - не є власником",
+      "options": [
+        "a - є власником",
+        "b - не є власником"
+      ],
+      "required": false,
+      "aliases": [
+        "отметка о собственности",
+        "право собственности",
+        "відмітка про власність",
+        "власність",
+        "C.4"
+      ]
+    },
+    {
+      "name": "make",
+      "code": "D.1",
+      "title": "Марка",
+      "type": "text",
+      "placeholder": "TOYOTA",
+      "hint": "[D.1] Марка транспортного засобу",
+      "required": true,
+      "validation": {
+        "maxlength": 100
+      },
+      "aliases": [
+        "марка авто",
+        "марка ТЗ",
+        "марка",
+        "D.1"
+      ]
+    },
+    {
+      "name": "vehicleType",
+      "code": "D.2",
+      "title": "Тип",
+      "type": "text",
+      "placeholder": "CAMRY",
+      "hint": "[D.2] Тип транспортного засобу",
+      "required": true,
+      "validation": {
+        "maxlength": 100
+      },
+      "aliases": [
+        "тип авто",
+        "тип ТЗ",
+        "тип транспортного средства",
+        "модель",
+        "модификация",
+        "D.2"
+      ]
+    },
+    {
+      "name": "commercialDescription",
+      "code": "D.3",
+      "title": "Комерційний опис",
+      "type": "textarea",
+      "placeholder": "Camry 2.5 AT",
+      "hint": "[D.3] Комерційний опис транспортного засобу",
+      "required": true,
+      "validation": {
+        "maxlength": 100
+      },
+      "aliases": [
+        "торговое описание",
+        "коммерческое название",
+        "комерційний опис",
+        "D.3"
+      ]
+    },
+    {
+      "name": "bodyType",
+      "code": "D.4",
+      "title": "Тип кузова",
+      "type": "text",
+      "placeholder": "Седан",
+      "hint": "[D.4] Тип кузова транспортного засобу",
+      "required": false,
+      "validation": {
+        "maxlength": 100
+      },
+      "aliases": [
+        "тип кузова",
+        "вид кузова",
+        "D.4"
+      ]
+    },
+    {
+      "name": "vin",
+      "code": "E",
+      "title": "Ідентифікаційний номер транспортного засобу",
+      "type": "text",
+      "placeholder": "1HGCR2F83HA000000",
+      "hint": "[E] Ідентифікаційний номер транспортного засобу (VIN)",
+      "required": true,
+      "validation": {
+        "maxlength": 17,
+        "pattern": "[A-HJ-NPR-Z0-9]{17}"
+      },
+      "aliases": [
+        "VIN code",
+        "вин код",
+        "VIN",
+        "ідентифікаційний номер",
+        "номер кузова",
+        "E"
+      ]
+    },
+    {
+      "name": "chassisNumber",
+      "code": "E.1",
+      "title": "Номер шасі (кузова, рами)",
+      "type": "text",
+      "placeholder": "123456",
+      "hint": "[E.1] Номер шасі, кузова або рами",
+      "required": true,
+      "validation": {
+        "maxlength": 50
+      },
+      "aliases": [
+        "номер шасси",
+        "номер рамы",
+        "номер кузова",
+        "номер шасі",
+        "E.1"
+      ]
+    },
+    {
+      "name": "maximumMass",
+      "code": "F.1",
+      "title": "Повна маса",
+      "type": "number",
+      "placeholder": "2100",
+      "hint": "[F.1] Повна маса в кг",
+      "required": true,
+      "validation": {
+        "min": 0,
+        "step": 1
+      },
+      "aliases": [
+        "полная масса",
+        "максимальная масса",
+        "повна маса",
+        "F.1"
+      ]
+    },
+    {
+      "name": "massInService",
+      "code": "G",
+      "title": "Маса без навантаження",
+      "type": "number",
+      "placeholder": "1550",
+      "hint": "[G] Маса без навантаження в кг",
+      "required": true,
+      "validation": {
+        "min": 0,
+        "step": 1
+      },
+      "aliases": [
+        "масса без нагрузки",
+        "снаряженная масса",
+        "снаряджена маса",
+        "маса без навантаження",
+        "G"
+      ]
+    },	
+    {
+      "name": "category",
+      "code": "J",
+      "title": "Категорія",
+      "type": "select",
+      "placeholder": "Оберіть категорію",
+      "hint": "[J] Категорія транспортного засобу (M1, N1 тощо)",
+      "options": [
+        "M1",
+        "M2",
+        "M3",
+        "N1",
+        "N2",
+        "N3",
+        "O1",
+        "O2",
+        "O3",
+        "O4",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6",
+        "L7",
+        "T",
+        "Інша"
+      ],
+      "required": true,
+      "aliases": [
+        "категория авто",
+        "категорія ТЗ",
+        "категория",
+        "J"
+      ]
+    },
+    {
+      "name": "typeApprovalNumber",
+      "code": "K",
+      "title": "Номер схвалення типу",
+      "type": "text",
+      "placeholder": "e1*2007/46*0000*00",
+      "hint": "[K] Номер схвалення типу транспортного засобу",
+      "required": false,
+      "aliases": [
+        "номер одобрения типа",
+        "сертификат типа",
+        "номер схвалення типу",
+        "K"
+      ]
+    },
+    {
+      "name": "engineDisplacement",
+      "code": "P.1",
+      "title": "Об’єм двигуна",
+      "type": "number",
+      "placeholder": "1300",
+      "hint": "[P.1] Об’єм двигуна в см³",
+      "required": false,
+      "validation": {
+        "min": 0,
+        "step": 1
+      },
+      "aliases": [
+        "объем двигателя",
+        "об'єм двигуна",
+        "об’єм двигуна",
+        "кубики",
+        "см3",
+        "P.1"
+      ]
+    },
+    {
+      "name": "maximumNetPower",
+      "code": "P.2",
+      "title": "Максимальна потужність",
+      "type": "number",
+      "placeholder": "133",
+      "hint": "[P.2] Максимальна потужність у кВт",
+      "required": false,
+      "validation": {
+        "min": 0,
+        "step": 0.01
+      },
+      "aliases": [
+        "мощность двигателя",
+        "потужність двигуна",
+        "максимальна потужність",
+        "кВт",
+        "kW",
+        "P.2"
+      ]
+    },
+    {
+      "name": "fuelOrEnergySource",
+      "code": "P.3",
+      "title": "Тип палива або джерела енергії",
+      "type": "select",
+      "placeholder": "Оберіть тип палива або джерела енергії",
+      "hint": "[P.3] Тип палива або джерела енергії",
+      "options": [
+        "Бензин",
+        "Дизельне паливо",
+        "Газ",
+        "Бензин / газ",
+        "Електроенергія",
+        "Гібрид",
+        "Інше"
+      ],
+      "required": true,
+      "aliases": [
+        "тип топлива",
+        "джерело енергії",
+        "вид пального",
+        "тип пального",
+        "тип палива",
+        "P.3"
+      ]
+    },
+    {
+      "name": "color",
+      "code": "R",
+      "title": "Колір",
+      "type": "text",
+      "placeholder": "Чорний",
+      "hint": "[R] Колір транспортного засобу",
+      "required": false,
+      "validation": {
+        "maxlength": 50
+      },
+      "aliases": [
+        "цвет кузова",
+        "цвет авто",
+        "колір",
+        "R"
+      ]
+    },
+    {
+      "name": "seats",
+      "code": "S.1",
+      "title": "Кількість сидячих місць з місцем водія",
+      "type": "number",
+      "placeholder": "5",
+      "hint": "[S.1] Кількість сидячих місць з місцем водія",
+      "required": true,
+      "validation": {
+        "min": 1,
+        "step": 1
+      },
+      "aliases": [
+        "количество мест",
+        "число мест",
+        "кількість місць для сидіння",
+        "кількість сидячих місць",
+        "S.1"
+      ]
+    },
+    {
+      "name": "standingPlaces",
+      "code": "S.2",
+      "title": "Кількість стоячих місць",
+      "type": "number",
+      "placeholder": "0",
+      "hint": "[S.2] Кількість стоячих місць",
+      "required": true,
+      "validation": {
+        "min": 0,
+        "step": 1
+      },
+      "aliases": [
+        "стоячие места",
+        "кількість стоячих місць",
+        "S.2"
+      ]
+    },
+    {
+      "name": "emissionStandard",
+      "code": "V.9",
+      "title": "Рівень екологічних норм",
+      "type": "text",
+      "placeholder": "Євро-6",
+      "hint": "[V.9] Рівень екологічних норм",
+      "required": false,
+      "validation": {
+        "maxlength": 50
+      },
+      "aliases": [
+        "экологический класс",
+        "экологические нормы",
+        "екологічний клас",
+        "рівень екологічних норм",
+        "V.9"
+      ]
+    },
+    {
+      "name": "purpose",
+      "code": null,
+      "title": "Призначення транспортного засобу",
+      "type": "text",
+      "placeholder": "Загальний",
+      "hint": "Додаткове поле: призначення транспортного засобу",
+      "required": true,
+      "validation": {
+        "maxlength": 100
+      },
+      "aliases": [
+        "назначение ТС",
+        "призначення",
+        "призначення ТЗ"
+      ]
+    },
+    {
+      "name": "specialNotes",
+      "code": null,
+      "title": "Особливі відмітки",
+      "type": "textarea",
+      "placeholder": "Встановлено ГБО / Співвласник...",
+      "hint": "Додаткова інформація: ГБО, співвласники, обмеження тощо",
+      "required": true,
+      "aliases": [
+        "особые отметки",
+        "особливі відмітки",
+        "доп информация",
+        "примечания"
+      ]
+    },
+    {
+      "name": "issuingAuthority",
+      "code": null,
+      "title": "Орган, що видав",
+      "type": "text",
+      "placeholder": "ТСЦ 8041",
+      "hint": "Територіальний сервісний центр МВС (ТСЦ)",
+      "required": false,
+      "aliases": [
+        "орган выдачи",
+        "кем выдан",
+        "орган що видав",
+        "сервисный центр",
+        "ТСЦ"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InspectionRequestForm",
+  "description": "Схема полів для форми введення заявки на проведення технічного огляду ТЗ (на основі zayavka_fiz.docx)",
+  "groups": [
+    {
+      "id": "firma",
+      "title": "Дані випробувальної лабораторії",
+      "fields": [
+        {
+          "name": "firma.name",
+          "title": "Назва випробувальної лабораторії",
+          "type": "text",
+          "placeholder": "ТОВ \"Авто-Лаб\"",
+          "hint": "Назва компанії/організації, що проводить технічний контроль",
+          "required": true
+        },
+        {
+          "name": "laboratory.number",
+          "title": "Номер дільниці лабораторії",
+          "type": "text",
+          "placeholder": "№ 1",
+          "hint": "Номер випробувальної дільниці",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "inspection_request",
+      "title": "Дані заявки",
+      "fields": [
+        {
+          "name": "inspection_request.number",
+          "title": "Номер заявки",
+          "type": "text",
+          "placeholder": "123/2024",
+          "hint": "Унікальний номер заявки",
+          "required": true
+        },
+        {
+          "name": "inspection_request.date",
+          "title": "Дата заявки",
+          "type": "date",
+          "placeholder": "YYYY-MM-DD",
+          "hint": "Дата проведення перевірки / підписання заявки",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "vehicle_owner",
+      "title": "Дані власника (довіреної особи)",
+      "fields": [
+        {
+          "name": "vehicle_owner.last_name",
+          "title": "Прізвище власника",
+          "type": "text",
+          "placeholder": "Шевченко",
+          "hint": "Прізвище власника або довіреної особи ТЗ",
+          "required": true
+        },
+        {
+          "name": "vehicle_owner.first_name",
+          "title": "Ім'я та по батькові власника",
+          "type": "text",
+          "placeholder": "Тарас Григорович",
+          "hint": "Ім’я та по батькові власника або довіреної особи",
+          "required": true
+        },
+        {
+          "name": "vehicle_owner.address",
+          "title": "Адреса власника",
+          "type": "textarea",
+          "placeholder": "м. Київ, вул. Хрещатик, буд. 1, кв. 10",
+          "hint": "Місцезнаходження чи місце проживання власника",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "tp",
+      "title": "Дані свідоцтва про реєстрацію ТЗ (Tech Passport)",
+      "source_ref": "tech_passport.json",
+      "fields": [
+        { "name": "tp.registrationNumber", "ref": "registrationNumber", "title": "Реєстраційний номер [A]", "required": true },
+        { "name": "tp.registrationDate", "ref": "registrationDate", "title": "Дата реєстрації [I]", "required": true },
+        { "name": "tp.firstRegistrationInUkraineDate", "ref": "firstRegistrationInUkraineDate", "title": "Дата першої реєстрації в Україні [B.1]", "required": true },
+        { "name": "tp.manufactureYear", "ref": "manufactureYear", "title": "Рік випуску [B.2]", "required": true },
+        { "name": "tp.make", "ref": "make", "title": "Марка [D.1]", "required": true },
+        { "name": "tp.vehicleType", "ref": "vehicleType", "title": "Тип [D.2]", "required": true },
+        { "name": "tp.commercialDescription", "ref": "commercialDescription", "title": "Комерційний опис [D.3]", "required": true },
+        { "name": "tp.vin", "ref": "vin", "title": "Ідентифікаційний номер (VIN) [E]", "required": true },
+        { "name": "tp.chassisNumber", "ref": "chassisNumber", "title": "Номер шасі (кузова, рами) [E.1]", "required": true },
+        { "name": "tp.maximumMass", "ref": "maximumMass", "title": "Повна маса [F.1]", "required": true },
+        { "name": "tp.massInService", "ref": "massInService", "title": "Маса без навантаження [G]", "required": true },
+        { "name": "tp.category", "ref": "category", "title": "Категорія [J]", "required": true },
+        { "name": "tp.engineDisplacement", "ref": "engineDisplacement", "title": "Об’єм двигуна [P.1]", "required": false },
+        { "name": "tp.fuelOrEnergySource", "ref": "fuelOrEnergySource", "title": "Тип палива або джерела енергії [P.3]", "required": true },
+        { "name": "tp.color", "ref": "color", "title": "Колір [R]", "required": false },
+        { "name": "tp.seats", "ref": "seats", "title": "Кількість сидячих місць [S.1]", "required": true },
+        { "name": "tp.standingPlaces", "ref": "standingPlaces", "title": "Кількість стоячих місць [S.2]", "required": true },
+        { "name": "tp.specialNotes", "ref": "specialNotes", "title": "Особливі відмітки", "required": true }
+      ]
+    },
+    {
+      "id": "customer",
+      "title": "Дані Замовника та посвідчення особи / водія",
+      "fields": [
+        {
+          "name": "customer.first_name",
+          "title": "Ім'я Замовника",
+          "type": "text",
+          "placeholder": "Іван",
+          "hint": "Ім’я замовника для підпису та протоколу",
+          "required": true
+        },
+        {
+          "name": "customer.last_name",
+          "title": "Прізвище Замовника",
+          "type": "text",
+          "placeholder": "Петренко",
+          "hint": "Прізвище замовника (у шаблоні перетворюється на UPPERCASE)",
+          "required": true
+        },
+        {
+          "name": "customer.dl_serie",
+          "title": "Серія посвідчення водія",
+          "type": "text",
+          "placeholder": "ВХА",
+          "hint": "Серія посвідчення водія",
+          "required": true,
+          "validation": { "maxlength": 3, "pattern": "[A-Za-zА-Яа-яІіЇїЄє]{3}" }
+        },
+        {
+          "name": "customer.dl_number",
+          "title": "Номер посвідчення водія",
+          "type": "text",
+          "placeholder": "123456",
+          "hint": "Номер посвідчення водія",
+          "required": true,
+          "validation": { "maxlength": 10 }
+        },
+        {
+          "name": "customer.phone",
+          "title": "Номер телефону",
+          "type": "tel",
+          "placeholder": "+380501234567",
+          "hint": "Контактний номер телефону замовника",
+          "required": true
+        },
+        {
+          "name": "customer.email",
+          "title": "Адреса електронної пошти",
+          "type": "email",
+          "placeholder": "client@example.com",
+          "hint": "E-mail для зв'язку та надсилання документів",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "inspector",
+      "title": "Дані інспектора / фахівця ВЛ",
+      "fields": [
+        {
+          "name": "iinspector.position",
+          "title": "Посада інспектора",
+          "type": "text",
+          "placeholder": "Провідний інженер",
+          "hint": "Посада фахівця, який прийняв замовлення",
+          "required": true
+        },
+        {
+          "name": "inspector.first_name",
+          "title": "Ім'я інспектора",
+          "type": "text",
+          "placeholder": "Олександр",
+          "hint": "Ім’я фахівця ВЛ",
+          "required": true
+        },
+        {
+          "name": "inspector.last_name",
+          "title": "Прізвище інспектора",
+          "type": "text",
+          "placeholder": "Сидоренко",
+          "hint": "Прізвище фахівця (у шаблоні перетворюється на UPPERCASE)",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "flags",
+      "title": "Додаткові умови та позначки",
+      "fields": [
+        {
+          "name": "b_for_my_purposes",
+          "title": "ТЗ використовується для власних потреб",
+          "type": "boolean",
+          "default": false,
+          "hint": "Позначка про те, що ТЗ використовується для власних потреб без залучення найманих працівників",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

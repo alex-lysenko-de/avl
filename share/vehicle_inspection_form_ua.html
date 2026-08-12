@@ -1,204 +1,727 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Дані транспортного засобу</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body { background:#f5f6f8; }
-    .required::after { content:" *"; color:#dc3545; }
-    .section-title { border-bottom:1px solid #dee2e6; padding-bottom:.5rem; margin-bottom:1rem; }
-    .hint { font-size:.875rem; color:#6c757d; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Свідоцтво про реєстрацію ТЗ — форма введення даних</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#EDF1F7;
+    --surface:#FFFFFF;
+    --surface-alt:#F5F8FC;
+    --ink:#14213A;
+    --ink-soft:#57607A;
+    --primary:#1E4E8C;
+    --primary-dark:#0F3260;
+    --accent:#A9842C;
+    --accent-soft:#F3E9D2;
+    --border:#D7DCE6;
+    --border-strong:#B7C0D1;
+    --placeholder:#9AA3B8;
+    --error:#B3261E;
+    --error-bg:#FCEBEA;
+    --success:#1E7F4C;
+    --r-sm:6px;
+    --r-md:12px;
+    --r-lg:18px;
+    --shadow-card:0 1px 2px rgba(20,34,56,.06), 0 10px 28px -14px rgba(20,34,56,.22);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- header ---------- */
+  .page-header{
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(160deg,var(--primary) 0%,var(--primary-dark) 100%);
+    color:#fff;
+    padding:2.6rem 1.25rem 2.2rem;
+  }
+  .page-header::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:repeating-linear-gradient(135deg, rgba(255,255,255,.07) 0 1px, transparent 1px 9px);
+    opacity:.55;
+    pointer-events:none;
+  }
+  .code-watermark{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 1.5rem;
+    gap:1rem;btn-ok
+    opacity:.14;
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    font-size:clamp(1.6rem,7vw,3.2rem);
+    letter-spacing:.02em;
+    pointer-events:none;
+    white-space:nowrap;
+    overflow:hidden;
+  }
+  .header-inner{position:relative; max-width:880px; margin:0 auto;}
+  .page-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.75rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent-soft);
+    margin:0 0 .6rem;
+  }
+  .page-title{
+    font-family:'IBM Plex Sans',sans-serif;
+    font-weight:700;
+    font-size:clamp(1.5rem,4.2vw,2.15rem);
+    line-height:1.2;
+    margin:0 0 .55rem;
+  }
+  .page-subtitle{
+    margin:0;
+    max-width:52ch;
+    font-size:1rem;
+    color:rgba(255,255,255,.85);
+  }
+
+  /* ---------- layout ---------- */
+  .container{max-width:880px; margin:0 auto; padding:1.5rem 1.1rem 2.5rem;}
+
+  .section{
+    background:var(--surface);
+    border-radius:var(--r-lg);
+    box-shadow:var(--shadow-card);
+    padding:1.4rem 1.25rem 1.6rem;
+    margin-bottom:1.25rem;
+  }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:.6rem .9rem;
+    margin-bottom:1.1rem;
+    padding-bottom:.85rem;
+    border-bottom:1.5px solid var(--border);
+  }
+  .section-title{
+    margin:0;
+    font-family:'IBM Plex Sans',sans-serif;
+    font-weight:700;
+    font-size:1.08rem;
+    color:var(--ink);
+  }
+  .section-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    font-weight:600;
+    letter-spacing:.05em;
+    color:var(--accent);
+    background:var(--accent-soft);
+    border:1px solid var(--accent);
+    border-radius:999px;
+    padding:.15rem .6rem;
+  }
+
+  .fields-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:1.35rem 1.25rem;
+  }
+  @media (min-width:700px){
+    .fields-grid{grid-template-columns:1fr 1fr;}
+    .field--wide{grid-column:1 / -1;}
+  }
+
+  /* ---------- fields ---------- */
+  .field{display:flex; flex-direction:column; gap:.4rem;}
+  .field-label{
+    display:flex;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:.5rem;
+    font-weight:600;
+    font-size:.98rem;
+    color:var(--ink);
+  }
+  .code-badge{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    font-weight:600;
+    color:var(--primary-dark);
+    background:var(--accent-soft);
+    border:1px solid var(--accent);
+    border-radius:var(--r-sm);
+    padding:.08rem .45rem;
+    line-height:1.5;
+    white-space:nowrap;
+  }
+  .required-mark{color:var(--error); margin-left:-.15rem;}
+
+  /* ---------- optional field collapsing ---------- */
+  .field-toggle{
+    appearance:none;
+    -webkit-appearance:none;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .field-toggle:hover{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .field-toggle:focus-visible{outline:2px solid var(--primary); outline-offset:2px;}
+
+  .field.collapsed{gap:0;}
+  .field.collapsed .field-title,
+  .field.collapsed .field-control,
+  .field.collapsed .field-hint,
+  .field.collapsed .field-error,
+  .field.collapsed .required-mark{
+    display:none;
+  }
+
+  .toggle-all{
+    display:flex;
+    align-items:center;
+    gap:.45rem;
+    margin-left:auto;
+    font-size:.85rem;
+    font-weight:600;
+    color:var(--ink-soft);
+    cursor:pointer;
+    user-select:none;
+  }
+  .toggle-all input{width:1.05rem; height:1.05rem; accent-color:var(--primary); cursor:pointer;}
+
+  .field-control{
+    width:100%;
+    min-height:3.1rem;
+    padding:.8rem 1rem;
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:1.0625rem;
+    color:var(--ink);
+    background:var(--surface);
+    border:1.5px solid var(--border);
+    border-radius:var(--r-md);
+    transition:border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+  }
+  .field-control::placeholder{color:var(--placeholder); font-weight:400; opacity:0.5;}
+  .field-control:hover{border-color:var(--border-strong);}
+  .field-control:focus{outline:none;}
+  .field-control:focus-visible{
+    outline:none;
+    border-color:var(--primary);
+    box-shadow:0 0 0 4px rgba(30,78,140,.15);
+  }
+  .field-control.is-invalid{border-color:var(--error); background:var(--error-bg);}
+  .field-control.is-invalid:focus-visible{box-shadow:0 0 0 4px rgba(179,38,30,.15);}
+
+  textarea.field-control{min-height:5.6rem; resize:vertical; line-height:1.5;}
+
+  select.field-control{
+    appearance:none;
+    -webkit-appearance:none;
+    padding-right:2.6rem;
+    background-repeat:no-repeat;
+    background-position:right 1rem center;
+    background-size:14px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2357607A'><path d='M5.5 7.5l4.5 5 4.5-5z'/></svg>");
+  }
+  select.field-control:invalid{color:var(--placeholder);}
+
+  .field-hint{margin:0; font-size:.8125rem; color:var(--ink-soft); line-height:1.45;}
+  .field-error{
+    display:none;
+    margin:0;
+    font-size:.8125rem;
+    font-weight:600;
+    color:var(--error);
+  }
+  .field-error.show{display:block;}
+
+  /* ---------- actions ---------- */
+  .form-actions{
+    position:sticky;
+    bottom:0;
+    display:flex;
+    justify-content:flex-end;
+    gap:.75rem;
+    padding:1rem 0 calc(1rem + env(safe-area-inset-bottom));
+    background:linear-gradient(to top, var(--bg) 55%, transparent);
+  }
+  .btn{
+    appearance:none;
+    border:none;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+    font-size:1.0625rem;
+    font-weight:700;
+    border-radius:var(--r-md);
+    padding:.9rem 1.8rem;
+    min-height:3.1rem;
+    transition:transform .08s ease, box-shadow .15s ease, background-color .15s ease;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{
+    background:var(--primary);
+    color:#fff;
+    box-shadow:0 8px 20px -8px rgba(30,78,140,.55);
+  }
+  .btn-primary:hover{background:var(--primary-dark);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink-soft);
+    border:1.5px solid var(--border-strong);
+  }
+  .btn-ghost:hover{background:var(--surface-alt); color:var(--ink);}
+
+  .form-note{font-size:.85rem; color:var(--ink-soft); text-align:right; margin:.4rem 0 0;}
+  .form-note .required-mark{margin-left:0;}
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important;}
+  }
+
+  .visually-hidden{
+    position:absolute; width:1px; height:1px; margin:-1px; padding:0;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+</style>
 </head>
 <body>
-<main class="container py-4">
-  <div class="mb-4">
-    <h1 class="h3">Дані транспортного засобу</h1>
-    <p class="text-muted mb-0">
-      Внесення даних зі свідоцтва про реєстрацію транспортного засобу (у побуті — «техпаспорт»)
-      для підготовки заявки на технічний огляд.
-    </p>
+
+<header class="page-header">
+  <div class="code-watermark" aria-hidden="true">
+    <span>A</span><span>D.1</span><span>E</span><span>J</span><span>P.3</span>
   </div>
+  <div class="header-inner">
+    <p class="page-eyebrow">Україна · Свідоцтво про реєстрацію ТЗ</p>
+    <h1 class="page-title">Технічний паспорт транспортного засобу</h1>
+    <p class="page-subtitle">Заповніть поля за даними свідоцтва про реєстрацію — введена інформація буде використана для подальшого формування документів.</p>
+  </div>
+</header>
 
-  <form id="vehicleForm" novalidate>
-    <section class="card shadow-sm mb-4">
-      <div class="card-body">
-        <h2 class="h5 section-title">Реєстраційні та ідентифікаційні дані</h2>
-        <div class="row g-3">
-          <div class="col-md-3">
-            <label for="certificateSeries" class="form-label required">Серія свідоцтва</label>
-            <input id="certificateSeries" name="certificateSeries" class="form-control"
-                   maxlength="3" pattern="[A-Za-zА-Яа-яІіЇїЄє]{3}" required>
-          </div>
-          <div class="col-md-3">
-            <label for="certificateNumber" class="form-label required">Номер свідоцтва</label>
-            <input id="certificateNumber" name="certificateNumber" class="form-control"
-                   maxlength="10" required>
-          </div>
-          <div class="col-md-6">
-            <label for="registrationNumber" class="form-label required">Реєстраційний номер</label>
-            <input id="registrationNumber" name="registrationNumber" class="form-control"
-                   maxlength="10" required>
-          </div>
-          <div class="col-12">
-            <label for="vin" class="form-label required">Номер кузова (VIN)</label>
-            <input id="vin" name="vin" class="form-control" maxlength="17"
-                   pattern="[A-HJ-NPR-Z0-9]{17}" required>
-            <div class="hint mt-1">17 символів латиницею та цифрами.</div>
-          </div>
-          <div class="col-md-4">
-            <label for="make" class="form-label required">Марка</label>
-            <input id="make" name="make" class="form-control" maxlength="100" required>
-          </div>
-          <div class="col-md-4">
-            <label for="model" class="form-label required">Модель</label>
-            <input id="model" name="model" class="form-control" maxlength="100" required>
-          </div>
-          <div class="col-md-4">
-            <label for="vehicleType" class="form-label required">Тип транспортного засобу</label>
-            <input id="vehicleType" name="vehicleType" class="form-control" maxlength="100" required>
-          </div>
-          <div class="col-md-4">
-            <label for="manufactureYear" class="form-label required">Рік випуску</label>
-            <input id="manufactureYear" name="manufactureYear" type="number"
-                   class="form-control" min="1886" max="2026" required>
-          </div>
-          <div class="col-md-4">
-            <label for="color" class="form-label">Колір</label>
-            <input id="color" name="color" class="form-control" maxlength="50">
-          </div>
-          <div class="col-md-4">
-            <label for="firstRegistrationDate" class="form-label">Дата першої реєстрації</label>
-            <input id="firstRegistrationDate" name="firstRegistrationDate" type="date" class="form-control" required>
-          </div>
+<main class="container">
+  <form id="tech-pasport-form" novalidate>
+
+    <section class="section" id="section-doc">
+      <div class="section-head">
+        <h2 class="section-title">Дані документа</h2>
+        <label class="toggle-all">
+          <input type="checkbox" id="toggle-all-optional">
+          <span>Показати всі необов'язкові поля</span>
+        </label>
+      </div>
+      <div class="fields-grid" id="group-doc">
+        <div class="field field-optional collapsed">
+          <label class="field-label" for="field-certificateSeries"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">Серія</button><span class="field-title">Серія свідоцтва</span></label>
+          <input id="field-certificateSeries" name="certificateSeries" class="field-control" aria-describedby="hint-certificateSeries error-certificateSeries" type="text" placeholder="СХК" maxlength="3" pattern="[A-Za-zА-Яа-яІіЇїЄє]{3}">
+          <p class="field-hint" id="hint-certificateSeries">3 літери серії документа</p>
+          <p class="field-error" id="error-certificateSeries" role="alert"></p>
+        </div>
+
+        <div class="field field-optional collapsed">
+          <label class="field-label" for="field-certificateNumber"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">Номер</button><span class="field-title">Номер свідоцтва</span></label>
+          <input id="field-certificateNumber" name="certificateNumber" class="field-control" aria-describedby="hint-certificateNumber error-certificateNumber" type="text" placeholder="123456" maxlength="10">
+          <p class="field-hint" id="hint-certificateNumber">Номер бланка або електронного свідоцтва</p>
+          <p class="field-error" id="error-certificateNumber" role="alert"></p>
         </div>
       </div>
     </section>
 
-    <section class="card shadow-sm mb-4">
-      <div class="card-body">
-        <h2 class="h5 section-title">Технічні характеристики</h2>
-        <div class="row g-3">
-          <div class="col-md-4">
-            <label for="category" class="form-label">Категорія</label>
-            <select id="category" name="category" class="form-select">
-              <option value="">Не зазначено</option>
-              <option>M1</option><option>M2</option><option>M3</option>
-              <option>N1</option><option>N2</option><option>N3</option>
-              <option>O1</option><option>O2</option><option>O3</option><option>O4</option>
-              <option>L1</option><option>L2</option><option>L3</option><option>L4</option><option>L5</option><option>L6</option><option>L7</option>
-              <option>T</option><option>Інша</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label for="fuelType" class="form-label">Тип пального / джерело енергії</label>
-            <select id="fuelType" name="fuelType" class="form-select">
-              <option value="">Не зазначено</option>
-              <option>Бензин</option>
-              <option>Дизельне паливо</option>
-              <option>Газ</option>
-              <option>Бензин / газ</option>
-              <option>Електроенергія</option>
-              <option>Гібрид</option>
-              <option>Інше</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label for="engineDisplacement" class="form-label">Об'єм двигуна, см³</label>
-            <input id="engineDisplacement" name="engineDisplacement" type="number"
-                   class="form-control" min="0" step="1">
-          </div>
-          <div class="col-md-4">
-            <label for="enginePower" class="form-label">Потужність двигуна, кВт</label>
-            <input id="enginePower" name="enginePower" type="number"
-                   class="form-control" min="0" step="0.01">
-          </div>
-          <div class="col-md-4">
-            <label for="unladenMass" class="form-label">Маса без навантаження, кг</label>
-            <input id="unladenMass" name="unladenMass" type="number"
-                   class="form-control" min="10" step="1" required>
-          </div>
-          <div class="col-md-4">
-            <label for="grossMass" class="form-label">Повна маса, кг</label>
-            <input id="grossMass" name="grossMass" type="number"
-                   class="form-control" min="0" step="1" required>
-          </div>
-          <div class="col-md-4">
-            <label for="seats" class="form-label">Кількість місць для сидіння</label>
-            <input id="seats" name="seats" type="number"
-                   class="form-control" min="1" step="1" required>
-          </div>
-		           <div class="col-md-4">
-            <label for="standingPlaces" class="form-label">Кількість стоячих місць</label>
-            <input id="standingPlaces" name="standingPlaces" type="number"
-                   class="form-control" min="1" step="1" required>
-          </div>
+    <section class="section" id="section-main">
+      <div class="section-head"><h2 class="section-title">Дані реєстраційного посвідчення</h2><span class="section-eyebrow">Коди A – V.9</span></div>
+      <div class="fields-grid" id="group-main">
+        <div class="field field--wide">
+          <label class="field-label" for="field-registrationNumber"><span class="code-badge" aria-hidden="true">[A]</span><span class="field-title">Реєстраційний номер</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-registrationNumber" name="registrationNumber" class="field-control" aria-describedby="hint-registrationNumber error-registrationNumber" type="text" placeholder="KA1234AB" maxlength="10" required aria-required="true">
+          <p class="field-hint" id="hint-registrationNumber">[A] Реєстраційний номер транспортного засобу</p>
+          <p class="field-error" id="error-registrationNumber" role="alert"></p>
+        </div>
+
+        <div class="field field-optional collapsed">
+          <label class="field-label" for="field-firstRegistrationDate"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">[B]</button><span class="field-title">Дата першої реєстрації</span></label>
+          <input id="field-firstRegistrationDate" name="firstRegistrationDate" class="field-control" aria-describedby="hint-firstRegistrationDate error-firstRegistrationDate" type="date" placeholder="YYYY-MM-DD">
+          <p class="field-hint" id="hint-firstRegistrationDate">[B] Дата першої реєстрації транспортного засобу</p>
+          <p class="field-error" id="error-firstRegistrationDate" role="alert"></p>
+        </div>
+
+        <div class="field field--wide">
+          <label class="field-label" for="field-firstRegistrationInUkraineDate"><span class="code-badge" aria-hidden="true">[B.1]</span><span class="field-title">Дата першої реєстрації в Україні</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-firstRegistrationInUkraineDate" name="firstRegistrationInUkraineDate" class="field-control" aria-describedby="hint-firstRegistrationInUkraineDate error-firstRegistrationInUkraineDate" type="date" placeholder="YYYY-MM-DD" required aria-required="true">
+          <p class="field-hint" id="hint-firstRegistrationInUkraineDate">[B.1] Дата першої реєстрації транспортного засобу в Україні</p>
+          <p class="field-error" id="error-firstRegistrationInUkraineDate" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="field-manufactureYear"><span class="code-badge" aria-hidden="true">[B.2]</span><span class="field-title">Рік випуску</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-manufactureYear" name="manufactureYear" class="field-control" aria-describedby="hint-manufactureYear error-manufactureYear" type="number" placeholder="2024" min="1900" max="2099" step="1" required aria-required="true">
+          <p class="field-hint" id="hint-manufactureYear">[B.2] Рік випуску транспортного засобу</p>
+          <p class="field-error" id="error-manufactureYear" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="field-registrationDate"><span class="code-badge" aria-hidden="true">[I]</span><span class="field-title">Дата реєстрації</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-registrationDate" name="registrationDate" class="field-control" aria-describedby="hint-registrationDate error-registrationDate" type="date" placeholder="YYYY-MM-DD" required aria-required="true">
+          <p class="field-hint" id="hint-registrationDate">[I] Дата реєстрації, яку засвідчує це свідоцтво</p>
+          <p class="field-error" id="error-registrationDate" role="alert"></p>
+        </div>
+
+        <div class="field field--wide">
+          <label class="field-label" for="field-ownerSurnameOrOrganization"><span class="code-badge" aria-hidden="true">[C.1.1]</span><span class="field-title">Прізвище або організація</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-ownerSurnameOrOrganization" name="ownerSurnameOrOrganization" class="field-control" aria-describedby="hint-ownerSurnameOrOrganization error-ownerSurnameOrOrganization" type="text" placeholder="Шевченко / ТОВ &quot;Авто&quot;" required aria-required="true">
+          <p class="field-hint" id="hint-ownerSurnameOrOrganization">[C.1.1] Прізвище власника або організація</p>
+          <p class="field-error" id="error-ownerSurnameOrOrganization" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="field-ownerGivenNames"><span class="code-badge" aria-hidden="true">[C.1.2]</span><span class="field-title">Ім’я та по батькові</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-ownerGivenNames" name="ownerGivenNames" class="field-control" aria-describedby="hint-ownerGivenNames error-ownerGivenNames" type="text" placeholder="Іван Петрович" required aria-required="true">
+          <p class="field-hint" id="hint-ownerGivenNames">[C.1.2] Ім’я та по батькові власника</p>
+          <p class="field-error" id="error-ownerGivenNames" role="alert"></p>
+        </div>
+
+        <div class="field field--wide field-optional collapsed">
+          <label class="field-label" for="field-ownerAddress"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">[C.1.3]</button><span class="field-title">Адреса</span></label>
+          <textarea id="field-ownerAddress" name="ownerAddress" class="field-control" aria-describedby="hint-ownerAddress error-ownerAddress" rows="3" placeholder="м. Київ, вул. Хрещатик, буд. 1"></textarea>
+          <p class="field-hint" id="hint-ownerAddress">[C.1.3] Місце проживання або місцезнаходження</p>
+          <p class="field-error" id="error-ownerAddress" role="alert"></p>
+        </div>
+
+        <div class="field field-optional collapsed">
+          <label class="field-label" for="field-ownership"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">[C.4]</button><span class="field-title">Власність</span></label>
+          <select id="field-ownership" name="ownership" class="field-control" aria-describedby="hint-ownership error-ownership">
+            <option value="" disabled selected hidden>Оберіть статус власника</option>
+            <option value="a - є власником">a - є власником</option>
+            <option value="b - не є власником">b - не є власником</option>
+          </select>
+          <p class="field-hint" id="hint-ownership">[C.4] a - є власником / b - не є власником</p>
+          <p class="field-error" id="error-ownership" role="alert"></p>
+        </div>
+
+        <div class="field field-optional collapsed">
+          <label class="field-label" for="field-expirationDate"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">[H]</button><span class="field-title">Дійсне до</span></label>
+          <input id="field-expirationDate" name="expirationDate" class="field-control" aria-describedby="hint-expirationDate error-expirationDate" type="date" placeholder="YYYY-MM-DD">
+          <p class="field-hint" id="hint-expirationDate">[H] Строк дії свідоцтва, за наявності обмеження</p>
+          <p class="field-error" id="error-expirationDate" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="field-make"><span class="code-badge" aria-hidden="true">[D.1]</span><span class="field-title">Марка</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-make" name="make" class="field-control" aria-describedby="hint-make error-make" type="text" placeholder="TOYOTA" maxlength="100" required aria-required="true">
+          <p class="field-hint" id="hint-make">[D.1] Марка транспортного засобу</p>
+          <p class="field-error" id="error-make" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="field-vehicleType"><span class="code-badge" aria-hidden="true">[D.2]</span><span class="field-title">Тип</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-vehicleType" name="vehicleType" class="field-control" aria-describedby="hint-vehicleType error-vehicleType" type="text" placeholder="CAMRY" maxlength="100" required aria-required="true">
+          <p class="field-hint" id="hint-vehicleType">[D.2] Тип транспортного засобу</p>
+          <p class="field-error" id="error-vehicleType" role="alert"></p>
+        </div>
+
+        <div class="field field--wide">
+          <label class="field-label" for="field-commercialDescription"><span class="code-badge" aria-hidden="true">[D.3]</span><span class="field-title">Комерційний опис</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <textarea id="field-commercialDescription" name="commercialDescription" class="field-control" aria-describedby="hint-commercialDescription error-commercialDescription" rows="3" placeholder="Camry 2.5 AT" maxlength="100" required aria-required="true"></textarea>
+          <p class="field-hint" id="hint-commercialDescription">[D.3] Комерційний опис транспортного засобу</p>
+          <p class="field-error" id="error-commercialDescription" role="alert"></p>
+        </div>
+
+        <div class="field field-optional collapsed">
+          <label class="field-label" for="field-bodyType"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">[D.4]</button><span class="field-title">Тип кузова</span></label>
+          <input id="field-bodyType" name="bodyType" class="field-control" aria-describedby="hint-bodyType error-bodyType" type="text" placeholder="Седан" maxlength="100">
+          <p class="field-hint" id="hint-bodyType">[D.4] Тип кузова транспортного засобу</p>
+          <p class="field-error" id="error-bodyType" role="alert"></p>
+        </div>
+
+        <div class="field field--wide">
+          <label class="field-label" for="field-vin"><span class="code-badge" aria-hidden="true">[E]</span><span class="field-title">Ідентифікаційний номер транспортного засобу</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-vin" name="vin" class="field-control" aria-describedby="hint-vin error-vin" type="text" placeholder="1HGCR2F83HA000000" maxlength="17" pattern="[A-HJ-NPR-Z0-9]{17}" required aria-required="true">
+          <p class="field-hint" id="hint-vin">[E] Ідентифікаційний номер транспортного засобу (VIN)</p>
+          <p class="field-error" id="error-vin" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="field-chassisNumber"><span class="code-badge" aria-hidden="true">[E.1]</span><span class="field-title">Номер шасі (кузова, рами)</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-chassisNumber" name="chassisNumber" class="field-control" aria-describedby="hint-chassisNumber error-chassisNumber" type="text" placeholder="123456" maxlength="50" required aria-required="true">
+          <p class="field-hint" id="hint-chassisNumber">[E.1] Номер шасі, кузова або рами</p>
+          <p class="field-error" id="error-chassisNumber" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="field-maximumMass"><span class="code-badge" aria-hidden="true">[F.1]</span><span class="field-title">Повна маса</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-maximumMass" name="maximumMass" class="field-control" aria-describedby="hint-maximumMass error-maximumMass" type="number" placeholder="2100" min="0" step="1" required aria-required="true">
+          <p class="field-hint" id="hint-maximumMass">[F.1] Повна маса в кг</p>
+          <p class="field-error" id="error-maximumMass" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="field-massInService"><span class="code-badge" aria-hidden="true">[G]</span><span class="field-title">Маса без навантаження</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-massInService" name="massInService" class="field-control" aria-describedby="hint-massInService error-massInService" type="number" placeholder="1550" min="0" step="1" required aria-required="true">
+          <p class="field-hint" id="hint-massInService">[G] Маса без навантаження в кг</p>
+          <p class="field-error" id="error-massInService" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="field-category"><span class="code-badge" aria-hidden="true">[J]</span><span class="field-title">Категорія</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <select id="field-category" name="category" class="field-control" aria-describedby="hint-category error-category" required aria-required="true">
+            <option value="" disabled selected hidden>Оберіть категорію</option>
+            <option value="M1">M1</option>
+            <option value="M2">M2</option>
+            <option value="M3">M3</option>
+            <option value="N1">N1</option>
+            <option value="N2">N2</option>
+            <option value="N3">N3</option>
+            <option value="O1">O1</option>
+            <option value="O2">O2</option>
+            <option value="O3">O3</option>
+            <option value="O4">O4</option>
+            <option value="L1">L1</option>
+            <option value="L2">L2</option>
+            <option value="L3">L3</option>
+            <option value="L4">L4</option>
+            <option value="L5">L5</option>
+            <option value="L6">L6</option>
+            <option value="L7">L7</option>
+            <option value="T">T</option>
+            <option value="Інша">Інша</option>
+          </select>
+          <p class="field-hint" id="hint-category">[J] Категорія транспортного засобу (M1, N1 тощо)</p>
+          <p class="field-error" id="error-category" role="alert"></p>
+        </div>
+
+        <div class="field field-optional collapsed">
+          <label class="field-label" for="field-typeApprovalNumber"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">[K]</button><span class="field-title">Номер схвалення типу</span></label>
+          <input id="field-typeApprovalNumber" name="typeApprovalNumber" class="field-control" aria-describedby="hint-typeApprovalNumber error-typeApprovalNumber" type="text" placeholder="e1*2007/46*0000*00">
+          <p class="field-hint" id="hint-typeApprovalNumber">[K] Номер схвалення типу транспортного засобу</p>
+          <p class="field-error" id="error-typeApprovalNumber" role="alert"></p>
+        </div>
+
+        <div class="field field-optional collapsed">
+          <label class="field-label" for="field-engineDisplacement"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">[P.1]</button><span class="field-title">Об&#x27;єм двигуна</span></label>
+          <input id="field-engineDisplacement" name="engineDisplacement" class="field-control" aria-describedby="hint-engineDisplacement error-engineDisplacement" type="number" placeholder="1300" min="0" step="1">
+          <p class="field-hint" id="hint-engineDisplacement">[P.1] Об&#x27;єм двигуна в см³</p>
+          <p class="field-error" id="error-engineDisplacement" role="alert"></p>
+        </div>
+
+        <div class="field field--wide field-optional collapsed">
+          <label class="field-label" for="field-maximumNetPower"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">[P.2]</button><span class="field-title">Максимальна потужність</span></label>
+          <input id="field-maximumNetPower" name="maximumNetPower" class="field-control" aria-describedby="hint-maximumNetPower error-maximumNetPower" type="number" placeholder="133" min="0" step="0.01">
+          <p class="field-hint" id="hint-maximumNetPower">[P.2] Максимальна потужність у кВт</p>
+          <p class="field-error" id="error-maximumNetPower" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="field-fuelOrEnergySource"><span class="code-badge" aria-hidden="true">[P.3]</span><span class="field-title">Тип палива або джерела енергії</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <select id="field-fuelOrEnergySource" name="fuelOrEnergySource" class="field-control" aria-describedby="hint-fuelOrEnergySource error-fuelOrEnergySource" required aria-required="true">
+            <option value="" disabled selected hidden>Оберіть тип палива або джерела енергії</option>
+            <option value="Бензин">Бензин</option>
+            <option value="Дизельне паливо">Дизельне паливо</option>
+            <option value="Газ">Газ</option>
+            <option value="Бензин / газ">Бензин / газ</option>
+            <option value="Електроенергія">Електроенергія</option>
+            <option value="Гібрид">Гібрид</option>
+            <option value="Інше">Інше</option>
+          </select>
+          <p class="field-hint" id="hint-fuelOrEnergySource">[P.3] Тип палива або джерела енергії</p>
+          <p class="field-error" id="error-fuelOrEnergySource" role="alert"></p>
+        </div>
+
+        <div class="field field-optional collapsed">
+          <label class="field-label" for="field-color"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">[R]</button><span class="field-title">Колір</span></label>
+          <input id="field-color" name="color" class="field-control" aria-describedby="hint-color error-color" type="text" placeholder="Чорний" maxlength="50">
+          <p class="field-hint" id="hint-color">[R] Колір транспортного засобу</p>
+          <p class="field-error" id="error-color" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="field-seats"><span class="code-badge" aria-hidden="true">[S.1]</span><span class="field-title">Кількість сидячих місць з місцем водія</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-seats" name="seats" class="field-control" aria-describedby="hint-seats error-seats" type="number" placeholder="5" min="1" step="1" required aria-required="true">
+          <p class="field-hint" id="hint-seats">[S.1] Кількість сидячих місць з місцем водія</p>
+          <p class="field-error" id="error-seats" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="field-standingPlaces"><span class="code-badge" aria-hidden="true">[S.2]</span><span class="field-title">Кількість стоячих місць</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-standingPlaces" name="standingPlaces" class="field-control" aria-describedby="hint-standingPlaces error-standingPlaces" type="number" placeholder="0" min="0" step="1" required aria-required="true">
+          <p class="field-hint" id="hint-standingPlaces">[S.2] Кількість стоячих місць</p>
+          <p class="field-error" id="error-standingPlaces" role="alert"></p>
+        </div>
+
+        <div class="field field-optional collapsed">
+          <label class="field-label" for="field-emissionStandard"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">[V.9]</button><span class="field-title">Рівень екологічних норм</span></label>
+          <input id="field-emissionStandard" name="emissionStandard" class="field-control" aria-describedby="hint-emissionStandard error-emissionStandard" type="text" placeholder="Євро-6" maxlength="50">
+          <p class="field-hint" id="hint-emissionStandard">[V.9] Рівень екологічних норм</p>
+          <p class="field-error" id="error-emissionStandard" role="alert"></p>
         </div>
       </div>
     </section>
 
-    <section class="card shadow-sm mb-4">
-      <div class="card-body">
-        <h2 class="h5 section-title">Додаткові ідентифікаційні дані</h2>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label for="bodyNumber" class="form-label">Номер кузова</label>
-            <input id="bodyNumber" name="bodyNumber" class="form-control" maxlength="50">
-            <div class="hint mt-1">Заповнюється лише якщо такий номер зазначений у документі.</div>
-          </div>
-          <div class="col-md-6">
-            <label for="chassisNumber" class="form-label">Номер шасі / рами</label>
-            <input id="chassisNumber" name="chassisNumber" class="form-control" maxlength="50">
-            <div class="hint mt-1">Заповнюється лише якщо такий номер зазначений у документі.</div>
-          </div>
-          <div class="col-md-6">
-            <label for="purpose" class="form-label">Призначення транспортного засобу</label>
-            <input id="purpose" name="purpose" class="form-control" maxlength="255" required>
-          </div>
-          <div class="col-md-6">
-            <label for="bodyType" class="form-label">Тип кузова</label>
-            <input id="bodyType" name="bodyType" class="form-control" maxlength="100">
-          </div>
-		  <div class="col-md-6">
-            <label for="specialNotes" class="form-label">Особливі відмітки</label>
-            <input id="specialNotes" name="specialNotes" class="form-control" maxlength="100" required>
-          </div>
+    <section class="section" id="section-extra">
+      <div class="section-head"><h2 class="section-title">Додаткова інформація</h2></div>
+      <div class="fields-grid" id="group-extra">
+        <div class="field">
+          <label class="field-label" for="field-purpose"><span class="field-title">Призначення транспортного засобу</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="field-purpose" name="purpose" class="field-control" aria-describedby="hint-purpose error-purpose" type="text" placeholder="Загальний" maxlength="100" required aria-required="true">
+          <p class="field-hint" id="hint-purpose">Додаткове поле: призначення транспортного засобу</p>
+          <p class="field-error" id="error-purpose" role="alert"></p>
+        </div>
+
+        <div class="field field--wide">
+          <label class="field-label" for="field-specialNotes"><span class="field-title">Особливі відмітки</span><span class="required-mark" aria-hidden="true">*</span></label>
+          <textarea id="field-specialNotes" name="specialNotes" class="field-control" aria-describedby="hint-specialNotes error-specialNotes" rows="3" placeholder="Встановлено ГБО / Співвласник..." required aria-required="true"></textarea>
+          <p class="field-hint" id="hint-specialNotes">Додаткова інформація: ГБО, співвласники, обмеження тощо</p>
+          <p class="field-error" id="error-specialNotes" role="alert"></p>
+        </div>
+
+        <div class="field field-optional collapsed">
+          <label class="field-label" for="field-issuingAuthority"><button type="button" class="code-badge field-toggle" aria-expanded="false" title="Показати/приховати поле">Орган</button><span class="field-title">Орган, що видав</span></label>
+          <input id="field-issuingAuthority" name="issuingAuthority" class="field-control" aria-describedby="hint-issuingAuthority error-issuingAuthority" type="text" placeholder="ТСЦ 8041">
+          <p class="field-hint" id="hint-issuingAuthority">Територіальний сервісний центр МВС (ТСЦ)</p>
+          <p class="field-error" id="error-issuingAuthority" role="alert"></p>
         </div>
       </div>
     </section>
 
-    <section class="card shadow-sm mb-4">
-      <div class="card-body">
-        <h2 class="h5 section-title">Підтвердження</h2>
-        <div class="form-check">
-          <input id="dataConfirmed" name="dataConfirmed" class="form-check-input" type="checkbox" required>
-          <label for="dataConfirmed" class="form-check-label required">
-            Дані перенесено зі свідоцтва про реєстрацію та перевірено інспектором
-          </label>
-        </div>
-      </div>
-    </section>
+    <p class="form-note"><span class="required-mark">*</span> — обов'язкове поле</p>
 
-    <div class="d-flex gap-2">
-      <button type="submit" class="btn btn-primary">Сформувати заявку</button>
-      <button type="reset" class="btn btn-outline-secondary">Очистити форму</button>
+    <div class="form-actions">
+      <button type="button" class="btn btn-ghost" id="btn-clear">Очистити форму</button>
+      <button type="submit" class="btn btn-primary" id="btn-ok">OK</button>
     </div>
   </form>
 </main>
 
-<script>
-document.getElementById('vehicleForm').addEventListener('submit', function (event) {
-  event.preventDefault();
 
-  if (!this.checkValidity()) {
-    this.classList.add('was-validated');
-    return;
+
+<script>
+(function () {
+  "use strict";
+
+  var form = document.getElementById("tech-pasport-form");
+  var fields = Array.prototype.slice.call(form.querySelectorAll("input, select, textarea"));
+
+  function setFieldState(input) {
+    var field = input.closest(".field");
+    var error = field ? field.querySelector(".field-error") : null;
+    if (!error) return;
+
+    if (input.validity.valid) {
+      input.classList.remove("is-invalid");
+      input.removeAttribute("aria-invalid");
+      error.textContent = "";
+      error.classList.remove("show");
+      return;
+    }
+
+    input.classList.add("is-invalid");
+    input.setAttribute("aria-invalid", "true");
+
+    var message = "Перевірте значення";
+    if (input.validity.valueMissing) message = "Обов'язкове поле";
+    else if (input.validity.patternMismatch) message = "Невірний формат значення";
+    else if (input.validity.tooLong) message = "Значення перевищує допустиму довжину";
+    else if (input.validity.rangeUnderflow) message = "Значення занадто мале";
+    else if (input.validity.rangeOverflow) message = "Значення занадто велике";
+    else if (input.validity.stepMismatch) message = "Некоректний крок значення";
+
+    error.textContent = message;
+    error.classList.add("show");
   }
 
-  alert('Форму заповнено. Серверне надсилання в межах поточного завдання не реалізовано.');
-});
+  fields.forEach(function (input) {
+    input.addEventListener("blur", function () { setFieldState(input); });
+    input.addEventListener("change", function () { setFieldState(input); });
+    input.addEventListener("input", function () {
+      if (input.classList.contains("is-invalid")) setFieldState(input);
+    });
+  });
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+	
+    var firstInvalid = null;
+    fields.forEach(function (input) {
+      setFieldState(input);
+      if (!input.validity.valid && !firstInvalid) firstInvalid = input;
+    });
+
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+      firstInvalid.focus({ preventScroll: true });
+      return;
+    }
+    // Підключайте тут API або інші обробники — поля вже є в DOM.
+    form.dispatchEvent(new CustomEvent("form:valid", { bubbles: true }));
+  });
+
+  // ---------- optional field collapsing ----------
+  var optionalFields = Array.prototype.slice.call(form.querySelectorAll(".field-optional"));
+  var toggleAllCheckbox = document.getElementById("toggle-all-optional");
+
+  function setFieldCollapsed(field, collapsed) {
+    var toggle = field.querySelector(".field-toggle");
+    field.classList.toggle("collapsed", collapsed);
+    if (toggle) toggle.setAttribute("aria-expanded", String(!collapsed));
+  }
+
+  function syncToggleAllCheckbox() {
+    var collapsedCount = optionalFields.filter(function (field) {
+      return field.classList.contains("collapsed");
+    }).length;
+
+    if (collapsedCount === 0) {
+      toggleAllCheckbox.checked = true;
+      toggleAllCheckbox.indeterminate = false;
+    } else if (collapsedCount === optionalFields.length) {
+      toggleAllCheckbox.checked = false;
+      toggleAllCheckbox.indeterminate = false;
+    } else {
+      toggleAllCheckbox.indeterminate = true;
+    }
+  }
+
+  optionalFields.forEach(function (field) {
+    var toggle = field.querySelector(".field-toggle");
+    if (!toggle) return;
+    toggle.addEventListener("click", function () {
+      setFieldCollapsed(field, !field.classList.contains("collapsed"));
+      syncToggleAllCheckbox();
+    });
+  });
+
+  if (toggleAllCheckbox) {
+    toggleAllCheckbox.addEventListener("change", function () {
+      var expand = toggleAllCheckbox.checked;
+      optionalFields.forEach(function (field) { setFieldCollapsed(field, !expand); });
+      toggleAllCheckbox.indeterminate = false;
+    });
+    syncToggleAllCheckbox();
+  }
+
+  document.getElementById("btn-clear").addEventListener("click", function () {
+    if (!window.confirm("Очистити всі введені дані форми?")) return;
+    form.reset();
+    fields.forEach(function (input) {
+      input.classList.remove("is-invalid");
+      input.removeAttribute("aria-invalid");
+      var error = input.closest(".field").querySelector(".field-error");
+      error.textContent = "";
+      error.classList.remove("show");
+    });
+  });
+})();
 </script>
 </body>
 </html>
